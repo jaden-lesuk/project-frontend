@@ -14,8 +14,10 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Header />
-        <PredictForm />
-        <Prediction />
+        <div className="container">
+          <div className="content-column"><PredictForm /></div>
+          <div className="content-column"><Prediction /></div>
+        </div> 
       </Provider>
     );
   }

@@ -16,11 +16,10 @@ class Prediction extends Component {
 
         return(
             <div>
+                <div>Prediction: {predictionResult[0]}</div>
                 { predictions.map( item => (
                     <div> {item.name} </div>
-                ))}
-            <div>Prediction: {predictionResult[0]}</div>
-
+                ))}          
             </div>
         )
     }

@@ -32,12 +32,12 @@ class PredictionForm extends Component {
 
         return(
             <div style={ formStyle }>
-                <form  onSubmit={this.onSubmit} style = {{ display: 'flex', flexDirection:'column'}}>
+                <form  onSubmit={this.onSubmit} style = {{ display: 'flex', flexDirection:'column', flex: 1}}>
                     <input 
                         type = "text"
                         name = "title"
                         placeholder = "Add a title ..."
-                        style = {{flex: '10', padding: '5px'}}
+                        style = {{flex: '10', padding: '5px', margin: '5px'}}
                         value = {this.state.title}
                         onChange = { this.onChange }
                     />
@@ -45,25 +45,26 @@ class PredictionForm extends Component {
                         type = "text"
                         name = "author"
                         placeholder = "Add an author ..."
-                        style = {{flex: '10', padding: '5px'}}
+                        style = {{flex: '10', padding: '5px', margin: '5px'}}
                         value = {this.state.author}
                         onChange = { this.onChange }
                     />
 
-                    <input 
+                    <textarea 
                         type = "text"
                         name = "maintext"
                         placeholder = "Add the text ..."
-                        style = {{flex: '10', padding: '5px'}}
+                        style = {{flex: '10', padding: '5px', margin: '5px'}}
                         value = {this.state.maintext}
                         onChange = { this.onChange }
+                        rows = {20}
                     />
 
                     <input 
                         type = "submit"
                         value = "submit"
                         className = "btn"
-                        style = {{flex: '1'}}
+                        style = {{flex: '1', margin: '5px'}}
                     />
                 </form>
             </div>
