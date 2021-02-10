@@ -1,11 +1,12 @@
-import { GET_PREDICTION, PREDICTION_RESULT } from '../actions/types'
+import { GET_PREDICTION, PREDICTION_RESULT, GET_TWEETS } from '../actions/types'
 
 const initialState = {
     predictions: [],
-    predictionResult: '0'
+    tweets: [],
+    predictionResult: ''
 }
 
-export default function( state=initialState, action ) {
+export default function Reducer( state=initialState, action ) {
     switch (action.type) {
         case GET_PREDICTION:
             return {
@@ -17,6 +18,12 @@ export default function( state=initialState, action ) {
             return {
                 ...state,
                 predictionResult: action.payload,
+            };
+
+        case GET_TWEETS:
+            return {
+                ...state,
+                tweets: action.payload,
             };
 
         default:

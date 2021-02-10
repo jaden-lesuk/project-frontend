@@ -1,72 +1,130 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { postPrediction } from '../flux/actions/PredictionActions'
+import { postPrediction } from '../flux/actions/PredictionActions';
+import { Button, Card, Alert } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+
+
+const colorMap ={
+    0: "success",
+    1: "danger"
+}
+
 
 class PredictionForm extends Component {
 
     state = {
+        source:'',
+        link: '',
         title: '',
-        author: '',
         maintext: '',
-        result: 'hello'
+
+        prediction: '',
+    }
+    
+    validate = () => {
+        if(this.state.title === ''||this.state.text === ''){
+            return false;
+        }else{
+            return true;
+        }
     }
 
-    onChange = (e) => this.setState({ [e.target.name] : e.target.value });
+    onChange = (e) => {
+        this.setState({prediction: ''})
+        this.setState({ [e.target.name] : e.target.value })}
 
-    onSubmit = (e) => {
+    onSubmit = async (e) => {
         e.preventDefault();
-        // predictedResult = this.props.postPrediction(this.state.title, this.state.author,this.state.maintext);
-        this.setState({ title: '' })
-        this.props.postPrediction(this.state.title, this.state.author,this.state.maintext);
+        if (this.validate()){
+            this.setState({ source: '', link: '', title: '', maintext: ''})
+            await this.props.postPrediction(this.state.title,this.state.maintext, this.state.source, this.state.link);
+            this.setState({prediction: this.props.prediction.predictionResult})
+        }else{
+            Swal.fire({icon: 'error', title: 'Oops...', text: 'Please enter details'})
+        }
     }
 
     render(){
+        const articleTrue = "This Article is allegedly TRUE"
+        const articleFalse = "This Article is allegedly FALSE"
+
         const formStyle = {
-            textAlign: 'left',
-            padding: '20px',
-            // width: '500px',
-            paddingLeft:'100px',
-            paddingRight:'100px',
-            marginBottom: '15px'
+            // padding: '3vh',
         }
 
+
         return(
-            <div style={ formStyle }>
-                <form  onSubmit={this.onSubmit} style = {{ display: 'flex', flexDirection:'column', flex: 1}}>
-                    <input 
-                        type = "text"
-                        name = "title"
-                        placeholder = "Add a title ..."
-                        style = {{flex: '10', padding: '5px', margin: '5px'}}
-                        value = {this.state.title}
-                        onChange = { this.onChange }
-                    />
-                    <input 
-                        type = "text"
-                        name = "author"
-                        placeholder = "Add an author ..."
-                        style = {{flex: '10', padding: '5px', margin: '5px'}}
-                        value = {this.state.author}
-                        onChange = { this.onChange }
-                    />
+            
 
-                    <textarea 
-                        type = "text"
-                        name = "maintext"
-                        placeholder = "Add the text ..."
-                        style = {{flex: '10', padding: '5px', margin: '5px'}}
-                        value = {this.state.maintext}
-                        onChange = { this.onChange }
-                        rows = {20}
-                    />
+            <div>
+            {
+                this.state.prediction === ''?
+                <Alert variant="info">The Article Prediction will appear here</Alert>
+                :<Alert variant={`${colorMap[this.state.prediction]}`}>{this.state.prediction===0? articleTrue: articleFalse}</Alert>
 
-                    <input 
-                        type = "submit"
-                        value = "submit"
-                        className = "btn"
-                        style = {{flex: '1', margin: '5px'}}
-                    />
-                </form>
+            }
+             
+            <Card  style={{backgroundColor:'#495057 ', marginBottom:'3vh'}} text="black" bg="light">
+                {/* <Card.Header as="h4" className=" font-weight-bold" >News Article Form</Card.Header> */}
+                <Card.Body style={ formStyle }>
+                    <form  onSubmit={this.onSubmit} >
+                        <div className="mb-3">
+                            <label className="form-label font-weight-bold" >Source:</label>
+                            <input 
+                                    type = "text"
+                                    name = "source"
+                                    className="form-control"
+                                    placeholder = "Add the source ..."
+                                    value = {this.state.source}
+                                    onChange = { this.onChange }
+                                />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label font-weight-bold" >Link:</label>
+                            <input 
+                                    type = "text"
+                                    name = "link"
+                                    className="form-control"
+                                    placeholder = "Add the link ..."
+                                    value = {this.state.link}
+                                    onChange = { this.onChange }
+                                />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label font-weight-bold" >* Title:</label>
+                            <input 
+                                    type = "text"
+                                    name = "title"
+                                    className="form-control"
+                                    placeholder = "Add the title ..."
+                                    value = {this.state.title}
+                                    onChange = { this.onChange }
+                                />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label font-weight-bold">* Text:</label>
+                            <textarea 
+                                type = "text"
+                                name = "maintext"
+                                placeholder = "Add the text ..."
+                                className="form-control"
+                                value = {this.state.maintext}
+                                onChange = { this.onChange }
+                                rows = {10}
+                            />
+                        </div>
+
+                        <Button variant="info" type="submit" size="md" block>Predict</Button>
+                    </form>
+                </Card.Body>
+                <Card.Footer>
+                    <div>* required</div>
+                </Card.Footer>
+            </Card>
             </div>
         )
     }
